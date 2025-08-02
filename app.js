@@ -166,6 +166,10 @@ const app = createApp({
             this.searchQuery = query;
             this.fetchRecipes(this.currentSort, 1);
         },
+        handleSearchReset() {
+            this.searchQuery = '';
+            this.fetchRecipes(this.currentSort, 1);
+        },
 
         handleSortChanged(sortOption) {
             this.currentPage = 1;
@@ -312,7 +316,10 @@ const app = createApp({
             <main class="container">
                 <div class="row mb-4">
                     <div class="col-12">
-                        <recipe-search @search="handleSearch" />
+                        <recipe-search 
+                            @search="handleSearch" 
+                            @reset="handleSearchReset"
+                        />
                     </div>
                 </div>
 
