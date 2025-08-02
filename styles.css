@@ -1,0 +1,106 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    transition: transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.card-img-top {
+    height: 180px;
+    object-fit: cover;
+}
+
+.form-range::-webkit-slider-thumb {
+    background: #0d6efd;
+}
+
+.form-range::-moz-range-thumb {
+    background: #0d6efd;
+}
+
+.form-range::-ms-thumb {
+    background: #0d6efd;
+}
+
+@media (max-width: 768px) {
+    .card-img-top {
+        height: 150px;
+    }
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.page-item {
+    margin: 0 5px;
+    list-style: none;
+}
+
+.page-link {
+    padding: 8px 16px;
+    border: 1px solid #dee2e6;
+    color: #0d6efd;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.page-link:hover {
+    background-color: #e9ecef;
+}
+
+.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+
+.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+}
+
+/* Add to your existing styles */
+.btn-group.flex-wrap {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.card .text-success, 
+.card .text-primary {
+    font-weight: 500;
+}
+
+.card .small {
+    font-size: 0.85rem;
+}
+.profile-pic {
+    object-fit: cover;
+    border: 2px solid white;
+}
+
+.dropdown-menu {
+    z-index: 1000;
+}
+
+.auth-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.modal-backdrop {
+    z-index: 1050;
+}
+
+.modal {
+    z-index: 1060;
+}
