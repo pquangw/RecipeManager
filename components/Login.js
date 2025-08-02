@@ -12,7 +12,9 @@ const LoginComponent = {
                     <input type="password" class="form-control" id="login-password" v-model="password" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
-                <p class="mt-2">Don't have an account? <a href="#" @click.prevent="switchToRegister">Register</a></p>
+                <p class="mt-2">Don't have an account? 
+                    <a href="#" @click.prevent="$emit('switch-view', 'register')">Register</a>
+                </p>
             </form>
         </div>
     `,
