@@ -234,17 +234,31 @@ const app = createApp({
             <div class="d-flex justify-content-between align-items-center">
                 <h1 class="mb-0">Recipe Manager</h1>
                 <div class="position-relative" ref="profileContainer">
-                    <div v-if="currentUser" class="d-flex align-items-center">
-                        <span class="me-2">{{ currentUser.name }}</span>
-                        <img 
-                            ref="profilePic"
-                            :src="currentUser.profilePic" 
-                            class="rounded-circle profile-pic" 
-                            width="40" 
-                            height="40"
-                            @click.stop="toggleDropdown"
-                            style="cursor: pointer;"
+                    <div v-if="currentUser" class="dropdown" :class="{ show: showDropdown }">
+                        <div class="d-flex align-items-center" style="cursor: pointer;" @click.stop="toggleDropdown">
+                            <span class="me-2">{{ currentUser.name }}</span>
+                            <img 
+                                :src=""
+                                class="rounded-circle profile-pic" 
+                                width="40" 
+                                height="40"
+                            >
+                        </div>
+                        <div 
+                            v-if="showDropdown" 
+                            class="dropdown-menu show position-absolute end-0 mt-2"
+                            style="min-width: 200px; z-index: 1000;"
+                            @click.stop
                         >
+                            <div class="p-3">
+                                <button 
+                                    class="btn btn-danger w-100" 
+                                    @click="logout"
+                                >
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <div v-else class="dropdown" :class="{ show: showDropdown }">
                         <button class="btn btn-light" @click.stop="toggleDropdown">
