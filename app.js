@@ -90,7 +90,7 @@ const app = createApp({
 
         fetchRecipes(sortOption = this.currentSort, page = this.currentPage) {
             this.isLoading = true;
-    
+
             try {
                 let recipes = [...this.allRecipes];
                 
@@ -102,7 +102,15 @@ const app = createApp({
                     const matchesCuisine = !this.activeFilters.cuisine || 
                                         (recipe.cuisines && recipe.cuisines.some(c => c.includes(this.activeFilters.cuisine)));
                     const matchesTime = recipe.readyInMinutes <= this.activeFilters.maxCookingTime;
-                    return matchesSearch && matchesCuisine && matchesTime;
+                    
+                    // Add favorites filter
+                    let matchesFavorites = true;
+                    if (this.activeFilters.favoritesOnly && this.currentUser) {
+                        const favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+                        matchesFavorites = favorites[this.currentUser.id]?.includes(recipe.id) || false;
+                    }
+                    
+                    return matchesSearch && matchesCuisine && matchesTime && matchesFavorites;
                 });
                 
                 this.filteredRecipeCount = recipes.length;
@@ -206,6 +214,10 @@ const app = createApp({
             this.currentUser = user;
             this.closeDropdown();
         },
+        refreshFavorites() {
+            // This will force the computed filteredRecipes to recalculate
+            this.fetchRecipes(this.currentSort, this.currentPage);
+        },
         logout() {
             localStorage.removeItem('currentUser');
             this.currentUser = null;
@@ -217,6 +229,11 @@ const app = createApp({
         const user = localStorage.getItem('currentUser');
         if (user) {
             this.currentUser = JSON.parse(user);
+        }
+        
+        // Initialize favorites if not exists
+        if (!localStorage.getItem('favorites')) {
+            localStorage.setItem('favorites', JSON.stringify({}));
         }
         
         this.loadRecipes();
@@ -322,6 +339,7 @@ const app = createApp({
                             :is-loading="isLoading"
                             :sort-option="currentSort"
                             @view-recipe="viewRecipe"
+                            @refresh-favorites="refreshFavorites"
                         />
 
                         <div class="d-flex justify-content-center mt-4">

@@ -7,7 +7,7 @@ const RecipeList = {
     components: {
         'recipe-card': RecipeCard
     },
-    emits: ['view-recipe'],
+    emits: ['view-recipe', 'refresh-favorites'],
     template: `
         <div class="row">
             <div class="col-12 mb-3">
@@ -22,8 +22,9 @@ const RecipeList = {
                 <recipe-card 
                     :recipe="recipe" 
                     :sort-option="sortOption"
-                    @view-recipe="$emit('view-recipe', $event)">
-                </recipe-card>
+                    @view-recipe="$emit('view-recipe', $event)"
+                    @favorite-toggled="$emit('refresh-favorites')"
+                />
             </div>
         </div>
     `

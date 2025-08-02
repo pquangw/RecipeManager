@@ -1,3 +1,4 @@
+// RecipeFilters.js
 const RecipeFilters = {
     data() {
         return {
@@ -8,11 +9,13 @@ const RecipeFilters = {
             ],
             localFilters: {
                 cuisine: '',
-                maxCookingTime: 120
+                maxCookingTime: 120,
+                favoritesOnly: false
             },
             defaultFilters: {
                 cuisine: '',
-                maxCookingTime: 120
+                maxCookingTime: 120,
+                favoritesOnly: false
             }
         }
     },
@@ -63,6 +66,18 @@ const RecipeFilters = {
                         <span>10 min</span>
                         <span>120 min</span>
                     </div>
+                </div>
+
+                <div class="form-check mb-3" v-if="$root.currentUser">
+                    <input 
+                        class="form-check-input" 
+                        type="checkbox" 
+                        id="favorites-filter"
+                        v-model="localFilters.favoritesOnly"
+                    >
+                    <label class="form-check-label" for="favorites-filter">
+                        My Favorites Only
+                    </label>
                 </div>
 
                 <div class="d-grid gap-2">
