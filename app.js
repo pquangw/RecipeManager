@@ -1,4 +1,16 @@
 const { createApp } = Vue;
+const { createRouter, createWebHashHistory } = VueRouter;
+
+// Create router
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes: [
+    { path: '/', component: { template: '<div></div>' }, alias: '/dashboard' },
+    { path: '/login', component: { template: '<div></div>' } },
+    { path: '/register', component: { template: '<div></div>' } },
+    { path: '/recipe/:id', component: { template: '<div></div>' }, props: true }
+  ]
+});
 
 const app = createApp({
     components: {
@@ -28,7 +40,8 @@ const app = createApp({
             forcePage: 0,
             currentUser: null,
             showDropdown: false,
-            selectedRecipeId: null
+            selectedRecipeId: null,
+            authModalVisible: false
         }
     },
     computed: {
@@ -87,7 +100,6 @@ const app = createApp({
             }
         },
         
-
         fetchRecipes(sortOption = this.currentSort, page = this.currentPage) {
             this.isLoading = true;
 
@@ -207,6 +219,7 @@ const app = createApp({
                 
         viewRecipe(id) {
             this.selectedRecipeId = id;
+            this.$router.push(`/recipe/${id}`);
         },
         toggleDropdown() {
             this.showDropdown = !this.showDropdown;
@@ -217,15 +230,47 @@ const app = createApp({
         handleAuthSuccess(user) {
             this.currentUser = user;
             this.closeDropdown();
+            this.$router.push('/');
+        },
+        
+        showLoginModal() {
+            this.$refs.authModal.showLogin();
+            this.showDropdown = false;
+            this.$router.push('/login');
+        },
+        
+        showRegisterModal() {
+            this.$refs.authModal.showRegister();
+            this.showDropdown = false;
+            this.$router.push('/register');
+        },
+        
+        closeAuthModal() {
+            this.$router.push('/');
         },
         refreshFavorites() {
-            // This will force the computed filteredRecipes to recalculate
             this.fetchRecipes(this.currentSort, this.currentPage);
         },
         logout() {
             localStorage.removeItem('currentUser');
             this.currentUser = null;
             this.closeDropdown();
+            this.$router.push('/');
+        },
+    },
+    watch: {
+        '$route'(to) {
+            if (to.path === '/login') {
+                this.$refs.authModal.showLogin();
+            } else if (to.path === '/register') {
+                this.$refs.authModal.showRegister();
+            } else if (to.path.startsWith('/recipe/')) {
+                this.selectedRecipeId = parseInt(to.params.id);
+            } else if (to.path === '/') {
+                // Close auth modal if open
+                const modal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
+                if (modal) modal.hide();
+            }
         }
     },
     mounted() {
@@ -248,6 +293,11 @@ const app = createApp({
                 this.showDropdown = false;
             }
         });
+
+        // Handle initial route
+        if (this.$route.path.startsWith('/recipe/')) {
+            this.selectedRecipeId = parseInt(this.$route.params.id);
+        }
     },
     template: `
         <div class="container">
@@ -294,13 +344,13 @@ const app = createApp({
                             <div class="p-3">
                                 <button 
                                     class="btn btn-primary w-100 mb-2" 
-                                    @click="$refs.authModal.showLogin(); showDropdown = false"
+                                    @click="showLoginModal"
                                 >
                                     Login
                                 </button>
                                 <button 
                                     class="btn btn-secondary w-100" 
-                                    @click="$refs.authModal.showRegister(); showDropdown = false"
+                                    @click="showRegisterModal"
                                 >
                                     Register
                                 </button>
@@ -311,7 +361,11 @@ const app = createApp({
             </div>
         </header>
 
-        <auth-modal ref="authModal" @auth-success="handleAuthSuccess" />
+        <auth-modal 
+            ref="authModal" 
+            @auth-success="handleAuthSuccess"
+            @close-modal="closeAuthModal"
+        />
 
             <main class="container">
                 <div class="row mb-4">
@@ -380,11 +434,12 @@ const app = createApp({
                 <recipe-detail 
                     v-if="selectedRecipeId" 
                     :recipe-id="selectedRecipeId" 
-                    @close="selectedRecipeId = null"
+                    @close="selectedRecipeId = null; $router.push('/')"
                 />
             </main>
         </div>
     `
 });
 
+app.use(router);
 app.mount('#app');
