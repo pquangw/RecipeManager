@@ -32,7 +32,6 @@ const LoginComponent = {
             if (user) {
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 this.$emit('login-success', user);
-                this.$emit('close-modal');
             } else {
                 alert('Invalid email or password');
             }

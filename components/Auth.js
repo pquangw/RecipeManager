@@ -17,16 +17,15 @@ const AuthModalComponent = {
         closeModal() {
             if (this.modal) {
                 this.modal.hide();
-                // Manually remove the backdrop if it exists
-                const backdrop = document.querySelector('.modal-backdrop');
-                if (backdrop) {
-                    backdrop.remove();
-                }
-                // Remove modal-open class from body
+                // Use Bootstrap's method to handle backdrop
+                const modalElement = document.getElementById('authModal');
+                modalElement.classList.remove('show');
+                modalElement.style.display = 'none';
                 document.body.classList.remove('modal-open');
-                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
             }
-            this.$emit('close-modal');
+            this.$router.push('/');
         },
         showLogin() {
             this.currentView = 'login';

@@ -34,6 +34,10 @@ const RecipeDetail = {
         },
         closeModal() {
             this.showModal = false;
+            // Clean up modal classes
+            document.body.classList.remove('modal-open');
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) backdrop.remove();
             this.$emit('close');
         },
         formatTime(minutes) {

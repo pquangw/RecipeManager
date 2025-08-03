@@ -51,7 +51,6 @@ const RegisterComponent = {
             localStorage.setItem('currentUser', JSON.stringify(newUser));
             
             this.$emit('register-success', newUser);
-            this.$emit('close-modal');
         },
         switchToLogin() {
             this.$emit('switch-to-login');
