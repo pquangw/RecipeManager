@@ -280,7 +280,7 @@ const app = createApp({
             this.currentUser = JSON.parse(user);
         }
         
-        // Initialize favorites if not exists
+        // Initialize favorites with proper structure if not exists
         if (!localStorage.getItem('favorites')) {
             localStorage.setItem('favorites', JSON.stringify({}));
         }

@@ -35,25 +35,33 @@ const RecipeCard = {
             
             const userId = this.$root.currentUser.id;
             
-            // Create a new object to ensure reactivity
-            const newFavorites = {...this.localFavorites};
+            // Get current favorites from localStorage to ensure we have the latest
+            const currentFavorites = JSON.parse(localStorage.getItem('favorites')) || {};
             
+            // Create a new object to ensure reactivity
+            const newFavorites = {...currentFavorites};
+            
+            // Initialize user's favorites array if it doesn't exist
             if (!newFavorites[userId]) {
                 newFavorites[userId] = [];
             }
             
+            // Check if recipe is already favorited
             const index = newFavorites[userId].indexOf(this.recipe.id);
+            
             if (index === -1) {
-                newFavorites[userId].push(this.recipe.id);
+                // Add to favorites
+                newFavorites[userId] = [...newFavorites[userId], this.recipe.id];
             } else {
-                newFavorites[userId].splice(index, 1);
+                // Remove from favorites
+                newFavorites[userId] = newFavorites[userId].filter(id => id !== this.recipe.id);
             }
             
             // Update both local state and localStorage
             this.localFavorites = newFavorites;
             localStorage.setItem('favorites', JSON.stringify(newFavorites));
             
-            // Emit an event to parent component if needed
+            // Emit an event to parent component
             this.$emit('favorite-toggled');
         }
     },
